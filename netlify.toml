@@ -1,10 +1,10 @@
 [build]
   base = "app"
-  publish = "app/dist"
-  command = "cd app && npm install && npm run build"
+  publish = "dist"
+  command = "npm install && npm run build"
 
 [dev]
-  command = "cd app && npm run dev"
+  command = "npm run dev"
 
 [[redirects]]
   from = "/*"
