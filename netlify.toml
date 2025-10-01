@@ -14,8 +14,8 @@
 [[headers]]
   for = "/*"
   [headers.values]
-    # Content Security Policy: restrict everything to self, allow required Kontent.ai endpoints, and allow embedding only inside Kontent.ai UI
-    Content-Security-Policy = "default-src 'self'; connect-src 'self' https://deliver.kontent.ai https://manage.kontent.ai; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; frame-ancestors https://app.kontent.ai; base-uri 'self'; form-action 'self';"
+    # Content Security Policy: restrict everything to self, allow required Kontent.ai endpoints, Google Fonts, and Sentry, and allow embedding only inside Kontent.ai UI
+    Content-Security-Policy = "default-src 'self'; connect-src 'self' https://deliver.kontent.ai https://manage.kontent.ai https://o4506230339207168.ingest.sentry.io; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self' https://app.kontent.ai; frame-ancestors https://app.kontent.ai; base-uri 'self'; form-action 'self';"
     # Legacy clickjacking protection (ALLOW-FROM has limited support; CSP frame-ancestors is authoritative)
     X-Frame-Options = "ALLOW-FROM https://app.kontent.ai"
     # Prevent MIME sniffing
