@@ -1,0 +1,1530 @@
+{
+    "items": [
+        {
+            "system": {
+                "id": "de0f6942-96cb-5d78-9478-fbc6ebc3e537",
+                "name": "[L2-Solution] Warehouse \u0026 Intralogistics",
+                "codename": "_cat____warehouse___intralogistics",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-07-31T13:59:10.3861047Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Warehouse \u0026 Intralogistics"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": [
+                        "_l1__solutions"
+                    ]
+                }
+            }
+        },
+        {
+            "system": {
+                "id": "3947ce0b-73c6-4937-898b-581472ed3102",
+                "name": "[Contacts]",
+                "codename": "_contacts_",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-08-21T23:46:32.1116291Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Pharma"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": []
+                }
+            }
+        },
+        {
+            "system": {
+                "id": "845c8c75-3f94-4fac-83d0-ce86517f82fc",
+                "name": "[DEV-L1] Pharma",
+                "codename": "_dev_l1__pharma",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-08-15T20:05:43.4722135Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Pharma"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": []
+                }
+            }
+        },
+        {
+            "system": {
+                "id": "7a6d8c24-8f5b-4d9c-8646-53e48d941d2d",
+                "name": "[DEV-L1] Supply chain",
+                "codename": "_dev_l1__supply_chain",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-08-15T14:07:20.2141117Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Supply chain"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": []
+                }
+            }
+        },
+        {
+            "system": {
+                "id": "6bb38f47-6dd6-43a8-aaca-9ac8bd823872",
+                "name": "[L1 - Industries]",
+                "codename": "_l1___industries_",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-07-31T14:11:15.5454715Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Industries"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": []
+                }
+            }
+        },
+        {
+            "system": {
+                "id": "9bb6697e-fee7-5439-8193-4f32ce55569c",
+                "name": "[L1 - Page Type]",
+                "codename": "_l1___page_type",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-08-05T20:50:11.5104369Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Page Type"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": []
+                }
+            }
+        },
+        {
+            "system": {
+                "id": "505aec83-a4e7-4c08-9799-128620eea39f",
+                "name": "[L1] Solutions",
+                "codename": "_l1__solutions",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-07-31T13:58:47.3950507Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Solutions"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": []
+                }
+            }
+        },
+        {
+            "system": {
+                "id": "3d48e79a-38dd-56b9-bfe5-5afc5815aafb",
+                "name": "[L2 - Page Type] Case Study",
+                "codename": "_l2___page_type__case_study",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-07-28T21:01:01.685717Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Case Study"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": [
+                        "_l1___page_type"
+                    ]
+                }
+            }
+        },
+        {
+            "system": {
+                "id": "d962391b-8e3e-5482-922d-e930b228be7b",
+                "name": "[L2 - Page Type] Events",
+                "codename": "_l2___page_type__events",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-08-05T20:38:29.0319445Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Event"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": [
+                        "_l1___page_type"
+                    ]
+                }
+            }
+        },
+        {
+            "system": {
+                "id": "890665b0-e2d3-5102-b356-d1182080d202",
+                "name": "[L2 - Page Type] Industry",
+                "codename": "_l2___page_type__industry",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-08-05T20:50:12.3389005Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Industry"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": [
+                        "_l1___page_type"
+                    ]
+                }
+            }
+        },
+        {
+            "system": {
+                "id": "c05978f0-6288-5610-838d-fd3ee7b7ae3c",
+                "name": "[L2 - Page Type] Insights",
+                "codename": "_l2___page_type__insights",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-07-28T21:01:03.3905741Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Insights"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": [
+                        "_l1___page_type"
+                    ]
+                }
+            }
+        },
+        {
+            "system": {
+                "id": "04a841c6-59de-5ce2-9751-0368430857da",
+                "name": "[L2 - Page Type] News",
+                "codename": "_l2___page_type__news",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-07-28T21:01:04.0069813Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "News"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": [
+                        "_l1___page_type"
+                    ]
+                }
+            }
+        },
+        {
+            "system": {
+                "id": "394ab4b6-4978-59c4-89f6-32f03f36f32b",
+                "name": "[L2 - Page Type] Partners",
+                "codename": "_l2___page_type__partners",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-07-28T21:01:04.5479793Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Partners"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": [
+                        "_l1___page_type"
+                    ]
+                }
+            }
+        },
+        {
+            "system": {
+                "id": "b2937d7d-67a1-5e70-8275-34068191813f",
+                "name": "[L2 - Page Type] Press Release",
+                "codename": "_l2___page_type__press_release",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-08-05T20:30:24.1966844Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Press Release"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": [
+                        "_l1___page_type"
+                    ]
+                }
+            }
+        },
+        {
+            "system": {
+                "id": "d58651d7-25dc-5723-ab6f-3ca3bab9686a",
+                "name": "[L2 - Page Type] Report",
+                "codename": "_l2___page_type__report",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-07-28T21:01:06.0465782Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Report"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": [
+                        "_l1___page_type"
+                    ]
+                }
+            }
+        },
+        {
+            "system": {
+                "id": "384b849b-4666-527d-add2-df489aaa19e9",
+                "name": "[L2 - Page Type] Solution",
+                "codename": "_l2___page_type__solution",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-07-28T21:01:06.5546542Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Solution"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": [
+                        "_l1___page_type"
+                    ]
+                }
+            }
+        },
+        {
+            "system": {
+                "id": "e50adb42-c838-5670-a647-ae3d91cfa592",
+                "name": "[L2 - Page Type] Sustainability",
+                "codename": "_l2___page_type__sustainability",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-07-28T21:01:07.0885908Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Sustainability"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": [
+                        "_l1___page_type"
+                    ]
+                }
+            }
+        },
+        {
+            "system": {
+                "id": "db633981-feda-5365-b8b5-7076eabca59e",
+                "name": "[L3-Solution] Manufacturing",
+                "codename": "_l2__manufacturing",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-07-31T13:57:23.6418172Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Manufacturing"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": [
+                        "_cat____warehouse___intralogistics"
+                    ]
+                }
+            }
+        },
+        {
+            "system": {
+                "id": "988616a5-c9f2-45ba-a2cc-ff17a4cce594",
+                "name": "[L2-Industries] Automotive",
+                "codename": "_l2_industries__automotive",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-07-31T14:12:50.9909182Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Automotive"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": [
+                        "_l1___industries_"
+                    ]
+                }
+            }
+        },
+        {
+            "system": {
+                "id": "1a3d55f9-162b-466b-a09d-9e0122f76b76",
+                "name": "[L2-Industries] Consumer Goods",
+                "codename": "_l2_industries__consumer_goods",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-07-31T14:13:13.7993788Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Consumer Goods"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": [
+                        "_l1___industries_"
+                    ]
+                }
+            }
+        },
+        {
+            "system": {
+                "id": "275331b0-28f4-4f30-8bb3-7a18083c89f0",
+                "name": "[L2-Industries] eCommerce \u0026 Retail",
+                "codename": "_l2_industries__consumer_goods__copy_",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-07-31T14:13:42.418247Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "eCommerce \u0026 Retail"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": [
+                        "_l1___industries_"
+                    ]
+                }
+            }
+        },
+        {
+            "system": {
+                "id": "4cece7ed-ab1e-407c-8cef-787b1003d532",
+                "name": "[L2-Industries] Food \u0026 Beverage",
+                "codename": "_l2_industries__ecommerce___retail__copy_",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-07-31T14:14:10.0992124Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Food \u0026 beverage"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": [
+                        "_l1___industries_"
+                    ]
+                }
+            }
+        },
+        {
+            "system": {
+                "id": "0e09ccfd-2f35-4db1-a713-4d98cefddcac",
+                "name": "[L2-Industries] Nicotine",
+                "codename": "_l2_industries__food___beverage__copy_",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-07-31T14:14:30.4123498Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Nicotine"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": [
+                        "_l1___industries_"
+                    ]
+                }
+            }
+        },
+        {
+            "system": {
+                "id": "bad0c7f4-9d0f-4c26-bd0a-10ba96d58491",
+                "name": "[L2-Industries] Parcel \u0026 Mail",
+                "codename": "_l2_industries__nicotine__copy_",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-07-31T14:14:49.8849945Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Parcel \u0026 Mail"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": [
+                        "_l1___industries_"
+                    ]
+                }
+            }
+        },
+        {
+            "system": {
+                "id": "e98d379e-ed6b-4e8b-b7ff-4558318a7847",
+                "name": "[L2-Industries] Other industries",
+                "codename": "_l2_industries__other_industries",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-08-05T21:50:00.7491143Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Other industries"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": []
+                }
+            }
+        },
+        {
+            "system": {
+                "id": "3a30dc89-d4ef-4eaa-988e-71ed975e90f6",
+                "name": "[L2-Industries] Pharma \u0026 Life Sciences",
+                "codename": "_l2_industries__parcel___mail__copy_",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-07-31T14:16:40.0452206Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Pharma \u0026 Life Sciences"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": [
+                        "_l1___industries_"
+                    ]
+                }
+            }
+        },
+        {
+            "system": {
+                "id": "7fd348d3-8b14-47ff-9ca7-81c6dc6e1e34",
+                "name": "[L2-Industries] Third Party Logistics",
+                "codename": "_l2_industries__pharma___life_sciences__copy_",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-07-31T14:17:03.8652618Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Third Party Logistics"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": [
+                        "_l1___industries_"
+                    ]
+                }
+            }
+        },
+        {
+            "system": {
+                "id": "bd3e7034-848d-4dd0-af61-cc1361827c9c",
+                "name": "[L2-Page type] Blog",
+                "codename": "_l2_page_type__blog",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-08-05T21:21:24.4909936Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Blog"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": [
+                        "_l1___page_type"
+                    ]
+                }
+            }
+        },
+        {
+            "system": {
+                "id": "e4d4b0bd-f02f-4935-9529-b6d1b9ec25f9",
+                "name": "[L2-Page type] Contact us",
+                "codename": "_l2_page_type__contact_us",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-08-04T17:11:25.0589066Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Contact"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": [
+                        "_l1___page_type"
+                    ]
+                }
+            }
+        },
+        {
+            "system": {
+                "id": "09fd1d51-b460-4a28-8ebc-f96e91ff7049",
+                "name": "[L2]Solution \u003E Parenteral \u0026 solids processing",
+                "codename": "_l2_solution___parenteral___solids_processing",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-07-30T23:26:38.2136696Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Parenteral \u0026 solids processing"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": []
+                }
+            }
+        },
+        {
+            "system": {
+                "id": "531c5258-4813-415a-b4d9-a8f00cec547c",
+                "name": "[L2-Solutions] Consulting \u0026 implementation",
+                "codename": "_l2_solutions__consulting___implementation",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-08-05T19:25:50.1501735Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Consulting \u0026 implementation"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": [
+                        "_l1__solutions"
+                    ]
+                }
+            }
+        },
+        {
+            "system": {
+                "id": "5046e96e-5565-4c95-9922-3992dffc6c7c",
+                "name": "[L2-Solutions] Parcel \u0026 mail",
+                "codename": "_l2_solutions__parcel___mail",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-07-31T14:00:17.5398713Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Parcel \u0026 mail"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": [
+                        "_l1__solutions"
+                    ]
+                }
+            }
+        },
+        {
+            "system": {
+                "id": "1713fb11-cba5-40f7-9997-5e387ead150a",
+                "name": "[L2-Solutions] Pharma \u0026 life sciences",
+                "codename": "_l2_solutions__pharma___life_sciences",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-07-31T13:59:46.2964663Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Pharma \u0026 life sciences"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": [
+                        "_l1__solutions"
+                    ]
+                }
+            }
+        },
+        {
+            "system": {
+                "id": "24ca9ac5-e714-437a-b096-83345ba61dd4",
+                "name": "Category Tag",
+                "codename": "category_tag",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-07-31T23:12:38.5908527Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Technologies"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": [
+                        "_l2___page_type__industry"
+                    ]
+                }
+            }
+        },
+        {
+            "system": {
+                "id": "f383627c-2ab8-477c-9e11-544c2d179cc3",
+                "name": "Category Tag - K2",
+                "codename": "category_tag___k2",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-08-04T17:50:08.6672176Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Supply Chain"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": []
+                }
+            }
+        },
+        {
+            "system": {
+                "id": "9bfc2b30-16b0-4b90-8da5-db11cd9ac72d",
+                "name": "Category Tag - K3",
+                "codename": "category_tag___k3",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-08-04T17:55:25.2750799Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Pharma"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": []
+                }
+            }
+        },
+        {
+            "system": {
+                "id": "31f4c703-2d8c-4a05-922c-ba1a22c645be",
+                "name": "Category Tag - K4",
+                "codename": "category_tag___k4",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-08-04T18:01:18.4884957Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Career"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": []
+                }
+            }
+        },
+        {
+            "system": {
+                "id": "4a97f565-821c-4ac2-8a61-688fbfce251a",
+                "name": "Category Tag - K4",
+                "codename": "category_tag___k4_4a97f56",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-08-04T18:19:19.7371825Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Sustainability"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": []
+                }
+            }
+        },
+        {
+            "system": {
+                "id": "01621ec8-870e-4f4f-9a78-8a587d2024a1",
+                "name": "Category Tag - K5",
+                "codename": "category_tag___k5",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-08-04T18:22:03.5614851Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Insights"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": []
+                }
+            }
+        },
+        {
+            "system": {
+                "id": "9ebd370a-d6d1-4c25-a168-4a1f4925968b",
+                "name": "Category Tag - K6",
+                "codename": "category_tag___k6",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-08-04T18:23:51.5396611Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Press"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": []
+                }
+            }
+        },
+        {
+            "system": {
+                "id": "cb43328a-894e-4842-986b-ce5d4d4c4e15",
+                "name": "Page tag",
+                "codename": "page_tag",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-08-04T18:55:43.1157354Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "PT - Kontakt"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": [
+                        "parent_tag___2"
+                    ]
+                }
+            }
+        },
+        {
+            "system": {
+                "id": "e397998d-d08b-43aa-8e85-9ba2041c9378",
+                "name": "Page Type",
+                "codename": "page_type",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-08-04T18:45:53.7364229Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Contact - PT"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": [
+                        "parent_tag"
+                    ]
+                }
+            }
+        },
+        {
+            "system": {
+                "id": "133c2c7d-c9de-4426-87c9-c8f26912dc80",
+                "name": "Page Type - 2",
+                "codename": "page_type___2",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-08-04T18:53:26.6359517Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Nachhaltigkeit - PT"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": []
+                }
+            }
+        },
+        {
+            "system": {
+                "id": "f3639bb8-6c1c-45ba-bd0f-97a374607dc8",
+                "name": "Parent Tag",
+                "codename": "parent_tag",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-08-04T18:46:08.2968475Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Parent Tag"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": []
+                }
+            }
+        },
+        {
+            "system": {
+                "id": "09f9ca6e-de5b-4c59-86d1-0a9fb08a981b",
+                "name": "Parent Tag - 2",
+                "codename": "parent_tag___2",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-08-04T18:55:59.397269Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Karriere"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": []
+                }
+            }
+        },
+        {
+            "system": {
+                "id": "a128f6a5-07f1-4e0c-afbf-8a10447b50f4",
+                "name": "QA-L2Content-Camilo",
+                "codename": "qa_l2content_camilo",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-07-30T21:16:18.8226556Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Cypress"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": []
+                }
+            }
+        },
+        {
+            "system": {
+                "id": "ca7f0964-d20d-4d8b-b7b3-b2c271702501",
+                "name": "QA-PageContent-Tag",
+                "codename": "qa_pagecontent_tag",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-07-30T21:15:57.2431474Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Article"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": [
+                        "qa_l2content_camilo"
+                    ]
+                }
+            }
+        },
+        {
+            "system": {
+                "id": "2baffc3c-14f6-4af4-8230-f64deabdb981",
+                "name": "TAG - K1",
+                "codename": "tag___k1",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-08-05T15:13:57.5679498Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Technologies"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": []
+                }
+            }
+        }
+    ],
+    "modular_content": {
+        "_cat____warehouse___intralogistics": {
+            "system": {
+                "id": "de0f6942-96cb-5d78-9478-fbc6ebc3e537",
+                "name": "[L2-Solution] Warehouse \u0026 Intralogistics",
+                "codename": "_cat____warehouse___intralogistics",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-07-31T13:59:10.3861047Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Warehouse \u0026 Intralogistics"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": [
+                        "_l1__solutions"
+                    ]
+                }
+            }
+        },
+        "_l1___industries_": {
+            "system": {
+                "id": "6bb38f47-6dd6-43a8-aaca-9ac8bd823872",
+                "name": "[L1 - Industries]",
+                "codename": "_l1___industries_",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-07-31T14:11:15.5454715Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Industries"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": []
+                }
+            }
+        },
+        "_l1___page_type": {
+            "system": {
+                "id": "9bb6697e-fee7-5439-8193-4f32ce55569c",
+                "name": "[L1 - Page Type]",
+                "codename": "_l1___page_type",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-08-05T20:50:11.5104369Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Page Type"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": []
+                }
+            }
+        },
+        "_l1__solutions": {
+            "system": {
+                "id": "505aec83-a4e7-4c08-9799-128620eea39f",
+                "name": "[L1] Solutions",
+                "codename": "_l1__solutions",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-07-31T13:58:47.3950507Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Solutions"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": []
+                }
+            }
+        },
+        "_l2___page_type__industry": {
+            "system": {
+                "id": "890665b0-e2d3-5102-b356-d1182080d202",
+                "name": "[L2 - Page Type] Industry",
+                "codename": "_l2___page_type__industry",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-08-05T20:50:12.3389005Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Industry"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": [
+                        "_l1___page_type"
+                    ]
+                }
+            }
+        },
+        "parent_tag": {
+            "system": {
+                "id": "f3639bb8-6c1c-45ba-bd0f-97a374607dc8",
+                "name": "Parent Tag",
+                "codename": "parent_tag",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-08-04T18:46:08.2968475Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Parent Tag"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": []
+                }
+            }
+        },
+        "parent_tag___2": {
+            "system": {
+                "id": "09f9ca6e-de5b-4c59-86d1-0a9fb08a981b",
+                "name": "Parent Tag - 2",
+                "codename": "parent_tag___2",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-08-04T18:55:59.397269Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Karriere"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": []
+                }
+            }
+        },
+        "qa_l2content_camilo": {
+            "system": {
+                "id": "a128f6a5-07f1-4e0c-afbf-8a10447b50f4",
+                "name": "QA-L2Content-Camilo",
+                "codename": "qa_l2content_camilo",
+                "language": "en",
+                "type": "_tag",
+                "collection": "default",
+                "sitemap_locations": [],
+                "last_modified": "2025-07-30T21:16:18.8226556Z",
+                "workflow": "default",
+                "workflow_step": "published"
+            },
+            "elements": {
+                "name": {
+                    "type": "text",
+                    "name": "Name",
+                    "value": "Cypress"
+                },
+                "parent_tag": {
+                    "type": "modular_content",
+                    "name": "Parent Tag",
+                    "value": []
+                }
+            }
+        }
+    },
+    "pagination": {
+        "skip": 0,
+        "limit": 0,
+        "count": 48,
+        "next_page": ""
+    }
+}
