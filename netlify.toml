@@ -1,0 +1,26 @@
+[build]
+  base = "app"
+  publish = "app/dist"
+  command = "cd app && npm install && npm run build"
+
+[dev]
+  command = "cd app && npm run dev"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    # Content Security Policy: restrict everything to self, allow required Kontent.ai endpoints, and allow embedding only inside Kontent.ai UI
+    Content-Security-Policy = "default-src 'self'; connect-src 'self' https://deliver.kontent.ai https://manage.kontent.ai; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; frame-ancestors https://app.kontent.ai; base-uri 'self'; form-action 'self';"
+    # Legacy clickjacking protection (ALLOW-FROM has limited support; CSP frame-ancestors is authoritative)
+    X-Frame-Options = "ALLOW-FROM https://app.kontent.ai"
+    # Prevent MIME sniffing
+    X-Content-Type-Options = "nosniff"
+    # Enable XSS protection
+    X-XSS-Protection = "1; mode=block"
+    # Prevent referrer information leakage
+    Referrer-Policy = "strict-origin-when-cross-origin"
