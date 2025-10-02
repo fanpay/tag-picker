@@ -1,16 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useCombobox, useMultipleSelection } from 'downshift';
 import { createDeliveryClient } from '@kontent-ai/delivery-sdk';
-import type { IContentItem } from '@kontent-ai/delivery-sdk';
+import type { IContentItem, Elements } from '@kontent-ai/delivery-sdk';
 import './App.css';
 
 // Custom Element interfaces for Kontent.ai
 interface CustomElementContext {
   projectId: string;
-  variant: {
-    id: string;
-    codename: string;
-  };
 }
 
 interface CustomElementConfig {
@@ -36,15 +32,10 @@ declare global {
   }
 }
 
-// Define the structure of a Tag item from the Kontent.ai Delivery API
-interface Tag extends IContentItem<any> {
-  elements: {
-    parent_tag?: {
-      value: string[];
-    };
-    [key: string]: any;
-  };
-}
+// Define the structure of a Tag item using Kontent.ai SDK interfaces\ninterface TagElements {\n  readonly parent_tag: Elements.LinkedItemsElement;\n  // Add other elements of the Tag content type if needed\n  [key: string]: any; // Index signature to satisfy IContentItemElements constraint\n}
+
+// Tag content item type using SDK patterns
+type Tag = IContentItem<TagElements>;
 
 interface TagNode extends Tag {
   children: TagNode[];
@@ -55,7 +46,6 @@ function App() {
   const [allTags, setAllTags] = useState<Tag[]>([]);
   const [parentTagCodename, setParentTagCodename] = useState<string | null>(null);
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
-  const [languageCodename, setLanguageCodename] = useState<string>('en-us');
 
   // Downshift multiple selection hook
   const {
@@ -233,12 +223,6 @@ function App() {
             console.error("parentTagCodename not configured in the custom element.");
           }
 
-          // Capture the language codename from the context
-          if (context.variant?.codename) {
-            setLanguageCodename(context.variant.codename);
-            console.log(`Custom element language: ${context.variant.codename}`);
-          }
-
           // Set the initial disabled state
           setDisabled(element.disabled);
 
@@ -246,7 +230,7 @@ function App() {
           window.CustomElement.setHeight(180);
 
           // Fetch all tags from the Delivery API
-          fetchTags(context.projectId, context.variant?.codename || 'en-us');
+          fetchTags(context.projectId);
         });
 
         // Subscribe to disabled state changes
@@ -260,12 +244,7 @@ function App() {
       const parentCodenames = tag.elements.parent_tag?.value || [];
       const currentNode = tagMap.get(tag.system.codename);
       
-      parentCodenames.forEach((parentCodename: string) => {
-        const parentNode = tagMap.get(parentCodename);
-        if (parentNode && currentNode) {
-          parentNode.children.push(currentNode);
-        }
-      });
+            parentCodenames.forEach((parentCodename: string) => {\n        const parentNode = tagMap.get(parentCodename);\n        if (parentNode && currentNode) {\n          parentNode.children.push(currentNode);\n        }\n      });
     };
 
     const buildTagHierarchy = (tags: Tag[], tagMap: Map<string, TagNode>) => {
@@ -285,23 +264,18 @@ function App() {
       return descendants;
     };
 
-    const fetchTags = async (projectId: string, languageCode: string = 'en-us') => {
+    const fetchTags = async (projectId: string) => {
       try {
-        console.log(`Fetching tags for language: ${languageCode}`);
-        
         // Create delivery client with the project ID
         const client = createDeliveryClient({
           environmentId: projectId
         });
 
-        // Fetch all tags using the SDK with language parameter
+        // Fetch all tags using the SDK
         const response = await client
           .items<Tag>()
           .type('_tag')
-          .languageParameter(languageCode)
           .toPromise();
-        
-        console.log(`Fetched ${response.data.items.length} tags in ${languageCode}`);
         
         if (parentTagCodename) {
           const allFetchedTags: Tag[] = response.data.items;
@@ -330,7 +304,7 @@ function App() {
     };
 
     initCustomElement();
-  }, [parentTagCodename, languageCodename]);
+  }, [parentTagCodename]);
 
   // Convert initial codenames to tags when tags are loaded
   useEffect(() => {
@@ -383,7 +357,7 @@ function App() {
 
   return (
     <div className="app">
-      <label {...getLabelProps()}>Select Tag(s) ({languageCodename})</label>
+      <label {...getLabelProps()}>Select Tag(s)</label>
       <div className="autocomplete-container">
         <div className="selected-tags">
           {selectedItems.map((selectedItemForRender, index) => (
