@@ -4,22 +4,36 @@ import { createDeliveryClient } from '@kontent-ai/delivery-sdk';
 import type { IContentItem } from '@kontent-ai/delivery-sdk';
 import './App.css';
 
-// Custom Element interfaces for Kontent.ai
+/**
+ * Custom Element interfaces for Kontent.ai integration
+ */
+
+/** Context provided by Kontent.ai when initializing a custom element */
 interface CustomElementContext {
+  /** The unique project identifier */
   projectId: string;
+  /** Information about the current content variant */
   variant: {
+    /** Unique variant identifier */
     id: string;
+    /** Variant codename (e.g., 'default', 'de', 'es') */
     codename: string;
   };
 }
 
+/** Configuration options for the custom element */
 interface CustomElementConfig {
+  /** Optional parent tag codename to filter the tag tree */
   parentTagCodename?: string;
 }
 
+/** Custom element instance provided by Kontent.ai */
 interface CustomElement {
+  /** Current value stored in the custom element */
   value: string;
+  /** Whether the element is disabled for editing */
   disabled: boolean;
+  /** Optional configuration passed from Kontent.ai */
   config?: CustomElementConfig;
 }
 
@@ -36,13 +50,21 @@ declare global {
   }
 }
 
-// Define the structure of a Tag item from the Kontent.ai Delivery API
-interface Tag extends IContentItem<any> {
+/**
+ * Tag content type interface based on the actual structure from Kontent.ai:
+ * - name: Text element for the tag name  
+ * - parent_tag: Modular content element for hierarchical relationships
+ */
+interface Tag extends IContentItem {
   elements: {
-    parent_tag?: {
+    name: {
+      value: string;
+    };
+    parent_tag: {
       value: string[];
     };
-    [key: string]: any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    [key: string]: any; // For SDK compatibility
   };
 }
 
@@ -86,12 +108,18 @@ function App() {
   );
 
   // Create tree structure for available tags
+  /** TreeTag extends Tag with hierarchical properties for tree display */
   interface TreeTag extends Tag {
     children: TreeTag[];
     level: number;
     isRoot: boolean;
   }
 
+  /**
+   * Creates a hierarchical tree structure from a flat array of tags
+   * @param tags - Array of tag items from Kontent.ai
+   * @returns Tree structure with parent-child relationships
+   */
   const createTagTree = (tags: Tag[]): TreeTag[] => {
     // Create a map for quick lookup
     const tagMap = new Map<string, TreeTag>();
@@ -139,7 +167,11 @@ function App() {
     return rootTags;
   };
 
-  // Flatten tree for downshift (which expects a flat array)
+  /**
+   * Flattens the hierarchical tree into a linear array for dropdown display
+   * @param treeNodes - Tree structure of tags with children
+   * @returns Flattened array maintaining hierarchical order
+   */
   const flattenTree = (treeNodes: TreeTag[]): TreeTag[] => {
     const result: TreeTag[] = [];
     
@@ -155,6 +187,25 @@ function App() {
   const tagTree = createTagTree(availableTags);
   const flattenedTags = flattenTree(tagTree);
 
+  /**
+   * Gets the display name for a tag, combining system name with element name
+   * Format: "System Name - Element Name" when different, otherwise just the element name
+   * @param tag - The tag item to get the display name for
+   * @returns Formatted display name
+   */
+  const getDisplayName = (tag: Tag): string => {
+    const systemName = tag.system.name;
+    const elementName = tag.elements.name.value;
+    
+    // If element name exists and is different from system name, show both
+    if (elementName && elementName.trim() !== systemName.trim()) {
+      return `${systemName} - ${elementName}`;
+    }
+    
+    // Otherwise, prefer element name if available, fallback to system name
+    return elementName || systemName;
+  };
+
   // Downshift combobox hook
   const {
     isOpen,
@@ -165,7 +216,7 @@ function App() {
     getItemProps,
   } = useCombobox({
     items: flattenedTags,
-    itemToString: (item) => item?.system.name || '',
+    itemToString: (item) => item ? getDisplayName(item) : '',
     defaultHighlightedIndex: 0,
     selectedItem: null,
     stateReducer(_state, actionAndChanges) {
@@ -395,7 +446,7 @@ function App() {
               })}
               className="selected-tag"
             >
-              {selectedItemForRender.system.name}
+              {getDisplayName(selectedItemForRender)}
               <button
                 type="button"
                 className="tag-remove"
@@ -405,7 +456,7 @@ function App() {
                   setSelectedTags(selectedItems.filter(item => item !== selectedItemForRender));
                 }}
                 disabled={disabled}
-                aria-label={`Remove ${selectedItemForRender.system.name}`}
+                aria-label={`Remove ${getDisplayName(selectedItemForRender)}`}
               >
                 ×
               </button>
@@ -434,7 +485,7 @@ function App() {
                 >
                   <span className="tag-hierarchy">
                     <span className={`tag-name ${item.isRoot ? 'root' : 'child'}`}>
-                      {item.system.name}
+                      {getDisplayName(item)}
                     </span>
                   </span>
                 </li>
