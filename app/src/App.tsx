@@ -72,6 +72,30 @@ interface TagNode extends Tag {
   children: TagNode[];
 }
 
+/**
+ * Parses the initial value from Kontent.ai to extract tag codenames
+ * Supports both old format (array of strings) and new format (array of objects)
+ */
+function parseInitialValue(value: string): string[] {
+  try {
+    const parsedValue = JSON.parse(value);
+    if (Array.isArray(parsedValue)) {
+      // Check if it's the new format (array of objects) or old format (array of strings)
+      if (parsedValue.length > 0 && typeof parsedValue[0] === 'object' && parsedValue[0].codename) {
+        // New format: array of tag objects
+        return parsedValue.map(tag => tag.codename);
+      } else {
+        // Old format: array of strings
+        return parsedValue;
+      }
+    }
+    return [];
+  } catch {
+    // If parsing fails, assume it's a single string (legacy format)
+    return [value];
+  }
+}
+
 function App() {
   const [disabled, setDisabled] = useState<boolean>(true);
   const [allTags, setAllTags] = useState<Tag[]>([]);
@@ -263,17 +287,7 @@ function App() {
         window.CustomElement.init((element, context) => {
           // Set the initial value from Kontent.ai
           if (typeof element.value === 'string' && element.value) {
-            let codenames: string[] = [];
-            try {
-              // Try to parse as a JSON array (new format)
-              const parsedValue = JSON.parse(element.value);
-              if (Array.isArray(parsedValue)) {
-                codenames = parsedValue;
-              }
-            } catch {
-              // If parsing fails, assume it's a single string (old format)
-              codenames = [element.value];
-            }
+            const codenames = parseInitialValue(element.value);
             setInitialCodenames(codenames);
           }
 
@@ -426,10 +440,16 @@ function App() {
   }, [selectedItems, isOpen, flattenedTags.length]);
 
   useEffect(() => {
-    // Send selected codenames to Kontent.ai
+    // Send complete tag information to Kontent.ai
     if (window.CustomElement && selectedItems) {
-      const selectedCodenames = selectedItems.map(tag => tag.system.codename);
-      window.CustomElement.setValue(JSON.stringify(selectedCodenames));
+      const selectedTagsInfo = selectedItems.map(tag => ({
+        codename: tag.system.codename,
+        name: tag.system.name,
+        displayName: tag.elements.name.value || tag.system.name,
+        id: tag.system.id,
+        parentTags: tag.elements.parent_tag?.value || []
+      }));
+      window.CustomElement.setValue(JSON.stringify(selectedTagsInfo));
     }
   }, [selectedItems]);
 
