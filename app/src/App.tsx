@@ -1,184 +1,15 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useCombobox, useMultipleSelection } from 'downshift';
-import { createDeliveryClient } from '@kontent-ai/delivery-sdk';
-import type { IContentItem } from '@kontent-ai/delivery-sdk';
+import type { Tag } from './types';
+import { 
+  parseInitialValue, 
+  getDisplayName, 
+  createTagTree, 
+  flattenTree, 
+  fetchTags, 
+  formatTagsForSaving 
+} from './utils';
 import './App.css';
-
-// TypeScript interfaces
-interface Tag extends IContentItem {
-  elements: {
-    name: { value: string };
-    parent_tag: { value: string[] };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    [key: string]: any;
-  };
-}
-
-interface TreeTag extends Tag {
-  children: TreeTag[];
-  level: number;
-  isRoot: boolean;
-}
-
-interface CustomElementContext {
-  projectId: string;
-  variant: { id: string; codename: string };
-}
-
-interface CustomElementConfig {
-  parentTagCodename?: string;
-}
-
-interface CustomElement {
-  value: string;
-  disabled: boolean;
-  config?: CustomElementConfig;
-}
-
-declare global {
-  interface Window {
-    CustomElement: {
-      init: (callback: (element: CustomElement, context: CustomElementContext) => void) => void;
-      setValue: (value: string | null) => void;
-      setHeight: (height: number) => void;
-      onDisabledChanged: (callback: (disabled: boolean) => void) => void;
-    };
-  }
-}
-
-// Utility functions
-const parseInitialValue = (value: string): string[] => {
-  try {
-    const parsed = JSON.parse(value);
-    if (Array.isArray(parsed)) {
-      return parsed.length > 0 && typeof parsed[0] === 'object' && parsed[0].codename
-        ? parsed.map(tag => tag.codename)
-        : parsed;
-    }
-  } catch {
-    return [value];
-  }
-  return [];
-};
-
-const getDisplayName = (tag: Tag): string => {
-  const elementName = tag.elements.name.value;
-  const systemName = tag.system.name;
-  
-  return elementName && elementName.trim() !== systemName.trim()
-    ? `${systemName} - ${elementName}`
-    : elementName || systemName;
-};
-
-const createTagTree = (tags: Tag[]): TreeTag[] => {
-  const tagMap = new Map<string, TreeTag>();
-  
-  // Initialize nodes
-  tags.forEach(tag => {
-    tagMap.set(tag.system.codename, {
-      ...tag,
-      children: [],
-      level: 0,
-      isRoot: true
-    });
-  });
-
-  const rootTags: TreeTag[] = [];
-
-  // Build hierarchy
-  tags.forEach(tag => {
-    const node = tagMap.get(tag.system.codename)!;
-    const parents = tag.elements.parent_tag?.value || [];
-    
-    if (parents.length === 0) {
-      rootTags.push(node);
-    } else {
-      const parentCodename = parents.find(p => tagMap.has(p));
-      if (parentCodename) {
-        const parentNode = tagMap.get(parentCodename)!;
-        parentNode.children.push(node);
-        node.level = parentNode.level + 1;
-        node.isRoot = false;
-      } else {
-        rootTags.push(node);
-      }
-    }
-  });
-
-  return rootTags;
-};
-
-const flattenTree = (nodes: TreeTag[]): TreeTag[] => {
-  const result: TreeTag[] = [];
-  const flatten = (node: TreeTag) => {
-    result.push(node);
-    node.children.forEach(flatten);
-  };
-  nodes.forEach(flatten);
-  return result;
-};
-
-const fetchTags = async (projectId: string, languageCode: string, parentFilter?: string): Promise<Tag[]> => {
-  try {
-    console.log(`Fetching tags for language: ${languageCode}`);
-    
-    const client = createDeliveryClient({
-      environmentId: projectId
-    });
-
-    const response = await client
-      .items<Tag>()
-      .type('_tag')
-      .languageParameter(languageCode)
-      .toPromise();
-    
-    console.log(`Fetched ${response.data.items.length} tags`);
-    
-    if (parentFilter) {
-      // Filter by parent tag hierarchy
-      const allTags = response.data.items;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const tagMap = new Map<string, Tag & { children: any[] }>();
-      
-      // Initialize map
-      allTags.forEach(tag => {
-        tagMap.set(tag.system.codename, { ...tag, children: [] });
-      });
-      
-      // Build hierarchy
-      allTags.forEach(tag => {
-        const parents = tag.elements.parent_tag?.value || [];
-        const currentNode = tagMap.get(tag.system.codename);
-        
-        parents.forEach((parentCodename: string) => {
-          const parentNode = tagMap.get(parentCodename);
-          if (parentNode && currentNode) {
-            parentNode.children.push(currentNode);
-          }
-        });
-      });
-      
-      // Get descendants of parent tag
-      const rootNode = tagMap.get(parentFilter);
-      if (rootNode) {
-        const getDescendants = (node: typeof rootNode): Tag[] => {
-          let descendants: Tag[] = [node];
-          for (const child of node.children) {
-            descendants = [...descendants, ...getDescendants(child)];
-          }
-          return descendants;
-        };
-        return getDescendants(rootNode);
-      }
-      return [];
-    }
-    
-    return response.data.items;
-  } catch (error) {
-    console.error("Error fetching tags:", error);
-    return [];
-  }
-};
 
 function App() {
   // State management
@@ -345,13 +176,7 @@ function App() {
   // Save value when selection changes
   useEffect(() => {
     if (window.CustomElement) {
-      const selectedTagsInfo = selectedItems.map(tag => ({
-        codename: tag.system.codename,
-        name: tag.system.name,
-        displayName: tag.elements.name.value || tag.system.name,
-        id: tag.system.id,
-        parentTags: tag.elements.parent_tag?.value || []
-      }));
+      const selectedTagsInfo = formatTagsForSaving(selectedItems);
       window.CustomElement.setValue(JSON.stringify(selectedTagsInfo));
     }
   }, [selectedItems]);
