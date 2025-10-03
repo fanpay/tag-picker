@@ -1,44 +1,40 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useCombobox, useMultipleSelection } from 'downshift';
 import { createDeliveryClient } from '@kontent-ai/delivery-sdk';
 import type { IContentItem } from '@kontent-ai/delivery-sdk';
 import './App.css';
 
-/**
- * Custom Element interfaces for Kontent.ai integration
- */
-
-/** Context provided by Kontent.ai when initializing a custom element */
-interface CustomElementContext {
-  /** The unique project identifier */
-  projectId: string;
-  /** Information about the current content variant */
-  variant: {
-    /** Unique variant identifier */
-    id: string;
-    /** Variant codename (e.g., 'default', 'de', 'es') */
-    codename: string;
+// TypeScript interfaces
+interface Tag extends IContentItem {
+  elements: {
+    name: { value: string };
+    parent_tag: { value: string[] };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    [key: string]: any;
   };
 }
 
-/** Configuration options for the custom element */
+interface TreeTag extends Tag {
+  children: TreeTag[];
+  level: number;
+  isRoot: boolean;
+}
+
+interface CustomElementContext {
+  projectId: string;
+  variant: { id: string; codename: string };
+}
+
 interface CustomElementConfig {
-  /** Optional parent tag codename to filter the tag tree */
   parentTagCodename?: string;
 }
 
-/** Custom element instance provided by Kontent.ai */
 interface CustomElement {
-  /** Current value stored in the custom element */
   value: string;
-  /** Whether the element is disabled for editing */
   disabled: boolean;
-  /** Optional configuration passed from Kontent.ai */
   config?: CustomElementConfig;
 }
 
-// The CustomElement object is globally available.
-// We declare it here to inform TypeScript about its existence and type.
 declare global {
   interface Window {
     CustomElement: {
@@ -50,60 +46,173 @@ declare global {
   }
 }
 
-/**
- * Tag content type interface based on the actual structure from Kontent.ai:
- * - name: Text element for the tag name  
- * - parent_tag: Modular content element for hierarchical relationships
- */
-interface Tag extends IContentItem {
-  elements: {
-    name: {
-      value: string;
-    };
-    parent_tag: {
-      value: string[];
-    };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    [key: string]: any; // For SDK compatibility
-  };
-}
-
-interface TagNode extends Tag {
-  children: TagNode[];
-}
-
-/**
- * Parses the initial value from Kontent.ai to extract tag codenames
- * Supports both old format (array of strings) and new format (array of objects)
- */
-function parseInitialValue(value: string): string[] {
+// Utility functions
+const parseInitialValue = (value: string): string[] => {
   try {
-    const parsedValue = JSON.parse(value);
-    if (Array.isArray(parsedValue)) {
-      // Check if it's the new format (array of objects) or old format (array of strings)
-      if (parsedValue.length > 0 && typeof parsedValue[0] === 'object' && parsedValue[0].codename) {
-        // New format: array of tag objects
-        return parsedValue.map(tag => tag.codename);
-      } else {
-        // Old format: array of strings
-        return parsedValue;
-      }
+    const parsed = JSON.parse(value);
+    if (Array.isArray(parsed)) {
+      return parsed.length > 0 && typeof parsed[0] === 'object' && parsed[0].codename
+        ? parsed.map(tag => tag.codename)
+        : parsed;
     }
-    return [];
   } catch {
-    // If parsing fails, assume it's a single string (legacy format)
     return [value];
   }
-}
+  return [];
+};
+
+const getDisplayName = (tag: Tag): string => {
+  const elementName = tag.elements.name.value;
+  const systemName = tag.system.name;
+  
+  return elementName && elementName.trim() !== systemName.trim()
+    ? `${systemName} - ${elementName}`
+    : elementName || systemName;
+};
+
+const createTagTree = (tags: Tag[]): TreeTag[] => {
+  const tagMap = new Map<string, TreeTag>();
+  
+  // Initialize nodes
+  tags.forEach(tag => {
+    tagMap.set(tag.system.codename, {
+      ...tag,
+      children: [],
+      level: 0,
+      isRoot: true
+    });
+  });
+
+  const rootTags: TreeTag[] = [];
+
+  // Build hierarchy
+  tags.forEach(tag => {
+    const node = tagMap.get(tag.system.codename)!;
+    const parents = tag.elements.parent_tag?.value || [];
+    
+    if (parents.length === 0) {
+      rootTags.push(node);
+    } else {
+      const parentCodename = parents.find(p => tagMap.has(p));
+      if (parentCodename) {
+        const parentNode = tagMap.get(parentCodename)!;
+        parentNode.children.push(node);
+        node.level = parentNode.level + 1;
+        node.isRoot = false;
+      } else {
+        rootTags.push(node);
+      }
+    }
+  });
+
+  return rootTags;
+};
+
+const flattenTree = (nodes: TreeTag[]): TreeTag[] => {
+  const result: TreeTag[] = [];
+  const flatten = (node: TreeTag) => {
+    result.push(node);
+    node.children.forEach(flatten);
+  };
+  nodes.forEach(flatten);
+  return result;
+};
+
+const fetchTags = async (projectId: string, languageCode: string, parentFilter?: string): Promise<Tag[]> => {
+  try {
+    console.log(`Fetching tags for language: ${languageCode}`);
+    
+    const client = createDeliveryClient({
+      environmentId: projectId
+    });
+
+    const response = await client
+      .items<Tag>()
+      .type('_tag')
+      .languageParameter(languageCode)
+      .toPromise();
+    
+    console.log(`Fetched ${response.data.items.length} tags`);
+    
+    if (parentFilter) {
+      // Filter by parent tag hierarchy
+      const allTags = response.data.items;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const tagMap = new Map<string, Tag & { children: any[] }>();
+      
+      // Initialize map
+      allTags.forEach(tag => {
+        tagMap.set(tag.system.codename, { ...tag, children: [] });
+      });
+      
+      // Build hierarchy
+      allTags.forEach(tag => {
+        const parents = tag.elements.parent_tag?.value || [];
+        const currentNode = tagMap.get(tag.system.codename);
+        
+        parents.forEach((parentCodename: string) => {
+          const parentNode = tagMap.get(parentCodename);
+          if (parentNode && currentNode) {
+            parentNode.children.push(currentNode);
+          }
+        });
+      });
+      
+      // Get descendants of parent tag
+      const rootNode = tagMap.get(parentFilter);
+      if (rootNode) {
+        const getDescendants = (node: typeof rootNode): Tag[] => {
+          let descendants: Tag[] = [node];
+          for (const child of node.children) {
+            descendants = [...descendants, ...getDescendants(child)];
+          }
+          return descendants;
+        };
+        return getDescendants(rootNode);
+      }
+      return [];
+    }
+    
+    return response.data.items;
+  } catch (error) {
+    console.error("Error fetching tags:", error);
+    return [];
+  }
+};
 
 function App() {
-  const [disabled, setDisabled] = useState<boolean>(true);
+  // State management
+  const [disabled, setDisabled] = useState(true);
   const [allTags, setAllTags] = useState<Tag[]>([]);
-  const [parentTagCodename, setParentTagCodename] = useState<string | null>(null);
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
-  const [languageCodename, setLanguageCodename] = useState<string>('en-us');
+  const [languageCodename, setLanguageCodename] = useState('default');
+  const [inputValue, setInputValue] = useState('');
+  // Parent tag state managed internally by fetchTags function
+  const [initialCodenames, setInitialCodenames] = useState<string[]>([]);
 
-  // Downshift multiple selection hook
+  // Memoized calculations
+  const availableTags = useMemo(
+    () => allTags.filter(tag => !selectedTags.some(selected => selected.system.codename === tag.system.codename)),
+    [allTags, selectedTags]
+  );
+
+  // Filter tags based on search input
+  const filteredTags = useMemo(() => {
+    if (!inputValue.trim()) return availableTags;
+    
+    return availableTags.filter(tag => {
+      const displayName = getDisplayName(tag).toLowerCase();
+      const searchText = inputValue.toLowerCase();
+      return displayName.includes(searchText);
+    });
+  }, [availableTags, inputValue]);
+
+  const flattenedTags = useMemo(() => {
+    const tree = createTagTree(filteredTags);
+    return flattenTree(tree);
+  }, [filteredTags]);
+
+  // Downshift hooks
   const {
     getSelectedItemProps,
     getDropdownProps,
@@ -113,124 +222,12 @@ function App() {
   } = useMultipleSelection({
     selectedItems: selectedTags,
     onStateChange({ selectedItems: newSelectedItems, type }) {
-      switch (type) {
-        case useMultipleSelection.stateChangeTypes.SelectedItemKeyDownBackspace:
-        case useMultipleSelection.stateChangeTypes.SelectedItemKeyDownDelete:
-        case useMultipleSelection.stateChangeTypes.DropdownKeyDownBackspace:
-        case useMultipleSelection.stateChangeTypes.FunctionRemoveSelectedItem:
-          setSelectedTags(newSelectedItems || []);
-          break;
-        default:
-          break;
+      if (type === useMultipleSelection.stateChangeTypes.FunctionRemoveSelectedItem) {
+        setSelectedTags(newSelectedItems || []);
       }
     },
   });
 
-  // Filter tags that are not already selected
-  const availableTags = allTags.filter(
-    tag => !selectedItems.some(selected => selected.system.codename === tag.system.codename)
-  );
-
-  // Create tree structure for available tags
-  /** TreeTag extends Tag with hierarchical properties for tree display */
-  interface TreeTag extends Tag {
-    children: TreeTag[];
-    level: number;
-    isRoot: boolean;
-  }
-
-  /**
-   * Creates a hierarchical tree structure from a flat array of tags
-   * @param tags - Array of tag items from Kontent.ai
-   * @returns Tree structure with parent-child relationships
-   */
-  const createTagTree = (tags: Tag[]): TreeTag[] => {
-    // Create a map for quick lookup
-    const tagMap = new Map<string, TreeTag>();
-    
-    // Initialize all tags as tree nodes
-    tags.forEach(tag => {
-      tagMap.set(tag.system.codename, {
-        ...tag,
-        children: [],
-        level: 0,
-        isRoot: true
-      });
-    });
-
-    const rootTags: TreeTag[] = [];
-
-    // Build the tree structure
-    tags.forEach(tag => {
-      const treeTag = tagMap.get(tag.system.codename)!;
-      const parentCodenames = tag.elements.parent_tag?.value || [];
-      
-      if (parentCodenames.length === 0) {
-        // This is a root tag
-        rootTags.push(treeTag);
-      } else {
-        // This tag has parents, add it to the first parent found in our available tags
-        let addedToParent = false;
-        parentCodenames.forEach((parentCodename: string) => {
-          const parent = tagMap.get(parentCodename);
-          if (parent && !addedToParent) {
-            parent.children.push(treeTag);
-            treeTag.level = parent.level + 1;
-            treeTag.isRoot = false;
-            addedToParent = true;
-          }
-        });
-        
-        // If no parent was found in available tags, treat as root
-        if (!addedToParent) {
-          rootTags.push(treeTag);
-        }
-      }
-    });
-
-    return rootTags;
-  };
-
-  /**
-   * Flattens the hierarchical tree into a linear array for dropdown display
-   * @param treeNodes - Tree structure of tags with children
-   * @returns Flattened array maintaining hierarchical order
-   */
-  const flattenTree = (treeNodes: TreeTag[]): TreeTag[] => {
-    const result: TreeTag[] = [];
-    
-    const addNodeAndChildren = (node: TreeTag) => {
-      result.push(node);
-      node.children.forEach(addNodeAndChildren);
-    };
-    
-    treeNodes.forEach(addNodeAndChildren);
-    return result;
-  };
-
-  const tagTree = createTagTree(availableTags);
-  const flattenedTags = flattenTree(tagTree);
-
-  /**
-   * Gets the display name for a tag, combining system name with element name
-   * Format: "System Name - Element Name" when different, otherwise just the element name
-   * @param tag - The tag item to get the display name for
-   * @returns Formatted display name
-   */
-  const getDisplayName = (tag: Tag): string => {
-    const systemName = tag.system.name;
-    const elementName = tag.elements.name.value;
-    
-    // If element name exists and is different from system name, show both
-    if (elementName && elementName.trim() !== systemName.trim()) {
-      return `${systemName} - ${elementName}`;
-    }
-    
-    // Otherwise, prefer element name if available, fallback to system name
-    return elementName || systemName;
-  };
-
-  // Downshift combobox hook
   const {
     isOpen,
     getLabelProps,
@@ -241,207 +238,113 @@ function App() {
   } = useCombobox({
     items: flattenedTags,
     itemToString: (item) => item ? getDisplayName(item) : '',
-    defaultHighlightedIndex: 0,
+    inputValue,
     selectedItem: null,
     stateReducer(_state, actionAndChanges) {
       const { changes, type } = actionAndChanges;
       
-      switch (type) {
-        case useCombobox.stateChangeTypes.InputKeyDownEnter:
-        case useCombobox.stateChangeTypes.ItemClick:
-          return {
-            ...changes,
-            isOpen: true,
-            highlightedIndex: 0,
-            inputValue: '',
-          };
-        default:
-          return changes;
+      if (type === useCombobox.stateChangeTypes.InputKeyDownEnter || 
+          type === useCombobox.stateChangeTypes.ItemClick) {
+        return {
+          ...changes,
+          isOpen: true,
+          highlightedIndex: 0,
+          inputValue: '',
+        };
       }
+      return changes;
     },
-    onStateChange({
-      type,
-      selectedItem: newSelectedItem,
-    }) {
-      switch (type) {
-        case useCombobox.stateChangeTypes.InputKeyDownEnter:
-        case useCombobox.stateChangeTypes.ItemClick:
-        case useCombobox.stateChangeTypes.InputBlur:
-          if (newSelectedItem) {
-            addSelectedItem(newSelectedItem);
-            setSelectedTags([...selectedItems, newSelectedItem]);
-          }
-          break;
-        default:
-          break;
+    onInputValueChange({ inputValue: newInputValue }) {
+      setInputValue(newInputValue || '');
+    },
+    onStateChange({ type, selectedItem: newSelectedItem }) {
+      if ((type === useCombobox.stateChangeTypes.InputKeyDownEnter || 
+           type === useCombobox.stateChangeTypes.ItemClick) && 
+          newSelectedItem) {
+        addSelectedItem(newSelectedItem);
+        setSelectedTags([...selectedTags, newSelectedItem]);
+        setInputValue(''); // Clear search after selection
       }
     },
   });
 
-  // Store initial codenames until tags are loaded
-  const [initialCodenames, setInitialCodenames] = useState<string[]>([]);
-
+  // Effects
   useEffect(() => {
-    const initCustomElement = () => {
-      if (window.CustomElement) {
-        window.CustomElement.init((element, context) => {
-          // Set the initial value from Kontent.ai
-          if (typeof element.value === 'string' && element.value) {
-            const codenames = parseInitialValue(element.value);
-            setInitialCodenames(codenames);
-          }
-
-          // Get parentTagCodename from the custom element configuration (optional)
-          if (element.config?.parentTagCodename) {
-            setParentTagCodename(element.config.parentTagCodename);
-            console.log(`Filtering by parent tag: ${element.config.parentTagCodename}`);
-          } else {
-            console.log("No parent tag filter configured - showing all tags");
-          }
-
-          // Capture the language codename from the context
-          if (context.variant?.codename) {
-            setLanguageCodename(context.variant.codename);
-            console.log(`Custom element language: ${context.variant.codename}`);
-          }
-
-          // Set the initial disabled state
-          setDisabled(element.disabled);
-
-          // Set initial height for the iframe
-          window.CustomElement.setHeight(180);
-
-          // Fetch all tags from the Delivery API
-          fetchTags(context.projectId, context.variant?.codename || 'en-us');
-        });
-
-        // Subscribe to disabled state changes
-        window.CustomElement.onDisabledChanged(setDisabled);
-      } else {
+    const initCustomElement = async () => {
+      if (!window.CustomElement) {
         console.error("CustomElement SDK not found.");
+        return;
       }
-    };
 
-    const addTagToParents = (tag: Tag, tagMap: Map<string, TagNode>) => {
-      const parentCodenames = tag.elements.parent_tag?.value || [];
-      const currentNode = tagMap.get(tag.system.codename);
-      
-      parentCodenames.forEach((parentCodename: string) => {
-        const parentNode = tagMap.get(parentCodename);
-        if (parentNode && currentNode) {
-          parentNode.children.push(currentNode);
+      window.CustomElement.init(async (element, context) => {
+        // Parse initial value
+        if (element.value) {
+          setInitialCodenames(parseInitialValue(element.value));
         }
+
+        // Log configuration
+        if (element.config?.parentTagCodename) {
+          console.log(`Filtering by parent tag: ${element.config.parentTagCodename}`);
+        }
+
+        // Set language
+        if (context.variant?.codename) {
+          setLanguageCodename(context.variant.codename);
+        }
+
+        // Set disabled state
+        setDisabled(element.disabled);
+
+        // Set initial height
+        window.CustomElement.setHeight(180);
+
+        // Fetch tags
+        const tags = await fetchTags(
+          context.projectId, 
+          context.variant?.codename || 'default',
+          element.config?.parentTagCodename
+        );
+        setAllTags(tags);
       });
-    };
 
-    const buildTagHierarchy = (tags: Tag[], tagMap: Map<string, TagNode>) => {
-      tags.forEach(tag => {
-        const parentCodenames = tag.elements.parent_tag?.value || [];
-        if (parentCodenames.length > 0) {
-          addTagToParents(tag, tagMap);
-        }
-      });
-    };
-
-    const getDescendants = (node: TagNode): Tag[] => {
-      let descendants: Tag[] = [node];
-      for (const child of node.children) {
-        descendants = [...descendants, ...getDescendants(child)];
-      }
-      return descendants;
-    };
-
-    const fetchTags = async (projectId: string, languageCode: string = 'en-us') => {
-      try {
-        console.log(`Fetching tags for language: ${languageCode}`);
-        
-        // Create delivery client with the project ID
-        const client = createDeliveryClient({
-          environmentId: projectId
-        });
-
-        // Fetch all tags using the SDK with language parameter
-        const response = await client
-          .items<Tag>()
-          .type('_tag')
-          .languageParameter(languageCode)
-          .toPromise();
-        
-        console.log(`Fetched ${response.data.items.length} tags in ${languageCode}`);
-        
-        if (parentTagCodename) {
-          const allFetchedTags: Tag[] = response.data.items;
-          const tagMap = new Map<string, TagNode>();
-
-          // Initialize tag map
-          allFetchedTags.forEach(tag => {
-            tagMap.set(tag.system.codename, { ...tag, children: [] });
-          });
-
-          // Build hierarchy
-          buildTagHierarchy(allFetchedTags, tagMap);
-
-          const rootNode = tagMap.get(parentTagCodename);
-          if (rootNode) {
-            setAllTags(getDescendants(rootNode));
-          } else {
-            setAllTags([]);
-          }
-        } else {
-          setAllTags(response.data.items);
-        }
-      } catch (error) {
-        console.error("Error fetching tags:", error);
-      }
+      window.CustomElement.onDisabledChanged(setDisabled);
     };
 
     initCustomElement();
-  }, [parentTagCodename, languageCodename]);
+  }, []);
 
-  // Convert initial codenames to tags when tags are loaded
+  // Initialize selected tags when tags are loaded
   useEffect(() => {
     if (allTags.length > 0 && initialCodenames.length > 0) {
       const initialTags = allTags.filter(tag => 
         initialCodenames.includes(tag.system.codename)
       );
       setSelectedTags(initialTags);
-      setInitialCodenames([]); // Clear initial codenames
+      setInitialCodenames([]);
     }
   }, [allTags, initialCodenames]);
 
+  // Update height when content changes
   useEffect(() => {
-    // Update the element's height whenever the content changes with a slight delay
     const updateHeight = () => {
       if (window.CustomElement) {
-        // Calculate height more accurately
-        const appElement = document.querySelector('.app');
-        if (appElement) {
-          // Base height calculation
-          const baseHeight = 180; // Minimum height
-          
-          // Add height for each row of tags (approximately 40px per row)
-          const tagsPerRow = Math.floor(400 / 120); // Assuming ~120px per tag
-          const tagRows = Math.ceil(selectedItems.length / tagsPerRow);
-          const tagsHeight = Math.max(40, tagRows * 40);
-          
-          // Add extra height if dropdown is open
-          const dropdownHeight = isOpen ? Math.min(160, flattenedTags.length * 44) : 0;
-          
-          const totalHeight = baseHeight + tagsHeight + dropdownHeight;
-          
-          window.CustomElement.setHeight(Math.min(totalHeight, 500)); // Max height 500px
-        }
+        const baseHeight = 180;
+        const tagRows = Math.ceil(selectedItems.length / 3);
+        const tagsHeight = Math.max(40, tagRows * 40);
+        const dropdownHeight = isOpen ? Math.min(160, flattenedTags.length * 44) : 0;
+        const totalHeight = baseHeight + tagsHeight + dropdownHeight;
+        
+        window.CustomElement.setHeight(Math.min(totalHeight, 500));
       }
     };
 
-    // Small delay to ensure DOM is updated
     const timeoutId = setTimeout(updateHeight, 100);
     return () => clearTimeout(timeoutId);
   }, [selectedItems, isOpen, flattenedTags.length]);
 
+  // Save value when selection changes
   useEffect(() => {
-    // Send complete tag information to Kontent.ai
-    if (window.CustomElement && selectedItems) {
+    if (window.CustomElement) {
       const selectedTagsInfo = selectedItems.map(tag => ({
         codename: tag.system.codename,
         name: tag.system.name,
@@ -458,32 +361,30 @@ function App() {
       <label {...getLabelProps()}>Select Tag(s) ({languageCodename})</label>
       <div className="autocomplete-container">
         <div className="selected-tags">
-          {selectedItems.map((selectedItemForRender, index) => (
+          {selectedItems.map((tag, index) => (
             <span
-              key={selectedItemForRender.system.codename}
-              {...getSelectedItemProps({
-                selectedItem: selectedItemForRender,
-                index,
-              })}
+              key={tag.system.codename}
+              {...getSelectedItemProps({ selectedItem: tag, index })}
               className="selected-tag"
             >
-              {getDisplayName(selectedItemForRender)}
+              {getDisplayName(tag)}
               <button
                 type="button"
                 className="tag-remove"
                 onClick={(e) => {
                   e.stopPropagation();
-                  removeSelectedItem(selectedItemForRender);
-                  setSelectedTags(selectedItems.filter(item => item !== selectedItemForRender));
+                  removeSelectedItem(tag);
+                  setSelectedTags(selectedItems.filter(item => item !== tag));
                 }}
                 disabled={disabled}
-                aria-label={`Remove ${getDisplayName(selectedItemForRender)}`}
+                aria-label={`Remove ${getDisplayName(tag)}`}
               >
                 ×
               </button>
             </span>
           ))}
         </div>
+        
         <div className="combobox-container">
           <input
             placeholder="Search for tags..."
@@ -491,28 +392,26 @@ function App() {
             disabled={disabled}
             {...getInputProps(getDropdownProps({ preventKeyAction: isOpen }))}
           />
-          {isOpen && (
-            <ul className="suggestions-list" {...getMenuProps()}>
-              {flattenedTags.map((item, index) => (
-                <li
-                  className={`suggestion-item ${
-                    highlightedIndex === index ? 'highlighted' : ''
-                  } ${item.isRoot ? 'root-tag' : 'child-tag'}`}
-                  key={`${item.system.codename}${index}`}
-                  style={{
-                    paddingLeft: `${1 + item.level * 1.5}rem`,
-                  }}
-                  {...getItemProps({ item, index })}
-                >
-                  <span className="tag-hierarchy">
-                    <span className={`tag-name ${item.isRoot ? 'root' : 'child'}`}>
-                      {getDisplayName(item)}
-                    </span>
-                  </span>
-                </li>
-              ))}
-            </ul>
-          )}
+          <ul 
+            className="suggestions-list" 
+            {...getMenuProps()}
+            style={{ display: isOpen ? 'block' : 'none' }}
+          >
+            {isOpen && flattenedTags.map((item, index) => (
+              <li
+                className={`suggestion-item ${
+                  highlightedIndex === index ? 'highlighted' : ''
+                } ${item.isRoot ? 'root-tag' : 'child-tag'}`}
+                key={`${item.system.codename}-${index}`}
+                style={{ paddingLeft: `${1 + item.level * 1.5}rem` }}
+                {...getItemProps({ item, index })}
+              >
+                <span className={`tag-name ${item.isRoot ? 'root' : 'child'}`}>
+                  {getDisplayName(item)}
+                </span>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </div>
