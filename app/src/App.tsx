@@ -277,11 +277,12 @@ function App() {
             setInitialCodenames(codenames);
           }
 
-          // Get parentTagCodename from the custom element configuration
+          // Get parentTagCodename from the custom element configuration (optional)
           if (element.config?.parentTagCodename) {
             setParentTagCodename(element.config.parentTagCodename);
+            console.log(`Filtering by parent tag: ${element.config.parentTagCodename}`);
           } else {
-            console.error("parentTagCodename not configured in the custom element.");
+            console.log("No parent tag filter configured - showing all tags");
           }
 
           // Capture the language codename from the context
