@@ -51,7 +51,20 @@ export interface CustomElementContext {
 export interface CustomElementConfig {
   /** Optional parent tag codename to filter the tag tree */
   parentTagCodename?: string;
+  /** Optional comma-separated list of specific tag codenames to fetch and display */
+  specificTagCodenames?: string;
 }
+
+/**
+ * Operation modes for the tag picker
+ */
+export type TagPickerMode = 
+  /** Fetch all tags from the project */
+  | 'all-tags'
+  /** Filter tags by parent tag hierarchy */
+  | 'parent-filtered'
+  /** Show only specified tag codenames */
+  | 'specific-tags';
 
 /**
  * Custom element instance interface

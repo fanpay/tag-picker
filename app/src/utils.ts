@@ -1,5 +1,5 @@
 import { createDeliveryClient } from '@kontent-ai/delivery-sdk';
-import type { Tag, TreeTag, SavedTagInfo } from './types';
+import type { Tag, TreeTag, SavedTagInfo, TagPickerMode } from './types';
 
 /**
  * Parses the initial value from Kontent.ai to extract tag codenames
@@ -187,4 +187,82 @@ export const formatTagsForSaving = (tags: Tag[]): SavedTagInfo[] => {
     id: tag.system.id,
     parentTags: tag.elements.parent_tag?.value || []
   }));
+};
+
+/**
+ * Parses comma-separated list of tag codenames from configuration
+ * 
+ * @param specificTagCodenames - Comma-separated string of tag codenames
+ * @returns Array of trimmed codename strings
+ */
+export const parseSpecificTagCodenames = (specificTagCodenames: string): string[] => {
+  if (!specificTagCodenames || typeof specificTagCodenames !== 'string') {
+    return [];
+  }
+  
+  return specificTagCodenames
+    .split(',')
+    .map(codename => codename.trim())
+    .filter(codename => codename.length > 0);
+};
+
+/**
+ * Determines the operation mode based on the provided configuration
+ * 
+ * @param config - Custom element configuration object
+ * @returns The determined TagPickerMode
+ */
+export const determineTagPickerMode = (config?: { parentTagCodename?: string; specificTagCodenames?: string }): TagPickerMode => {
+  if (config?.specificTagCodenames) {
+    return 'specific-tags';
+  }
+  if (config?.parentTagCodename) {
+    return 'parent-filtered';
+  }
+  return 'all-tags';
+};
+
+/**
+ * Fetches specific tags by their codenames from Kontent.ai
+ * 
+ * @param projectId - Kontent.ai project/environment ID
+ * @param languageCode - Language variant codename
+ * @param tagCodenames - Array of specific tag codenames to fetch
+ * @returns Promise resolving to array of matching tags
+ */
+export const fetchSpecificTags = async (
+  projectId: string, 
+  languageCode: string, 
+  tagCodenames: string[]
+): Promise<Tag[]> => {
+  try {
+    console.log(`Fetching specific tags: ${tagCodenames.join(', ')} for language: ${languageCode}`);
+    
+    const client = createDeliveryClient({
+      environmentId: projectId
+    });
+
+    // Fetch tags with codename filter
+    const response = await client
+      .items<Tag>()
+      .type('_tag')
+      .languageParameter(languageCode)
+      .inFilter('system.codename', tagCodenames)
+      .toPromise();
+    
+    const foundTags = response.data.items;
+    console.log(`Found ${foundTags.length} out of ${tagCodenames.length} requested tags`);
+    
+    // Log any missing tags
+    const foundCodenames = foundTags.map(tag => tag.system.codename);
+    const missingCodenames = tagCodenames.filter(codename => !foundCodenames.includes(codename));
+    if (missingCodenames.length > 0) {
+      console.warn(`Tags not found: ${missingCodenames.join(', ')}`);
+    }
+    
+    return foundTags;
+  } catch (error) {
+    console.error("Error fetching specific tags:", error);
+    return [];
+  }
 };

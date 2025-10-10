@@ -60,14 +60,63 @@ Add the custom element to any content type where you need tag selection. The ele
 | Parameter | Type | Description | Required |
 |-----------|------|-------------|----------|
 | `parentTagCodename` | string | Filters tags to show only descendants of the specified parent tag | No |
+| `specificTagCodenames` | string | Comma-separated list of specific tag codenames to fetch and display | No |
 
-### Example Configuration
+### Operation Modes
 
+**Quick Guidelines**: Use **All Tags Mode** (no config) when content creators need full access to your tag taxonomy. Use **Parent Filtered Mode** when you want to scope tags to a specific category branch (e.g., only "Product Categories" and their children). Use **Specific Tags Mode** when you need precise control over exactly which tags are available, regardless of hierarchy - perfect for standardized content workflows, limited choice scenarios, or when you want to present a curated list of tags with their real Kontent.ai names and properties.
+
+The custom element operates in three different modes based on configuration:
+
+#### 1. All Tags Mode (Default)
+Shows all tags from the project.
+```json
+{}
+```
+
+#### 2. Parent Filtered Mode  
+Shows only tags that are descendants of the specified parent tag.
 ```json
 {
   "parentTagCodename": "product-categories"
 }
 ```
+
+#### 3. Specific Tags Mode (NEW)
+Shows only the tags with the specified codenames. The element will fetch these tags from Kontent.ai and display them with their real names and properties.
+```json
+{
+  "specificTagCodenames": "_l1__solutions,_l1__industries,_l2_solutions__consulting___implementation"
+}
+```
+
+**Example**: If you provide `_l1__solutions,_l1__industries`, the UI will show:
+- [L1-Solutions] Solutions  
+- [L1-Industries] Industries
+
+**Configuration Priority**: `specificTagCodenames` > `parentTagCodename` > default (all tags)
+
+### Fixed Tags Mode
+
+When `fixedTags` is configured, the custom element will:
+- Use the provided list instead of fetching from Kontent.ai API
+- Display "Fixed List" indicator in the UI
+- Support full hierarchy and search functionality
+- Maintain same data format for selected tags
+
+#### Fixed Tag Item Structure
+```json
+{
+  "codename": "technology",
+  "name": "Technology", 
+  "systemName": "Technology",
+  "id": "tech-001",
+  "parentTags": []
+}
+```
+
+**Required Fields**: `codename`, `name`, `systemName`, `id`
+**Optional Fields**: `parentTags` (array of parent codenames for hierarchy)
 
 ## 🏗️ Architecture & How It Works
 
@@ -266,6 +315,89 @@ console.log(`Filtering by parent tag: ${element.config.parentTagCodename}`);
 - **Tag selection**: Immediate visual feedback
 - **Memory usage**: Efficient (single tag array in memory)
 - **Network calls**: Minimal (1 API call per session)
+
+## 🎯 Specific Tags Mode - Detailed Guide
+
+### Features of Specific Tags Mode
+
+The Specific Tags mode allows you to define exactly which tags should be available by providing their codenames. The component will fetch these tags from Kontent.ai and display them with their real names and properties.
+
+- ✅ **Real-time search**: Works the same as other modes
+- ✅ **Hierarchy preserved**: Maintains parent-child relationships if they exist
+- ✅ **Multi-selection**: Allows selecting multiple tags
+- ✅ **Validation**: Reports in console if any tags are not found
+- ✅ **Performance**: Only loads necessary tags
+- ✅ **Compatibility**: Same save format as other modes
+
+### Usage Example
+
+**Configuration Input:**
+```json
+{
+  "specificTagCodenames": "_l1__solutions,_l1__industries,_l2_solutions__consulting___implementation"
+}
+```
+
+**UI Output:**
+```
+Select Tag(s) (default) - Specific Tags
+
+Available tags:
+- [L1-Solutions] Solutions
+- [L1-Industries] Industries  
+- [L2-Solutions] Consulting & Implementation
+```
+
+### Debug Information
+
+The component logs useful information to the console:
+
+```javascript
+// Mode detected
+"Using specific tags mode"
+
+// Requested tags
+"Fetching specific tags: _l1__solutions, _l1__industries for language: default"
+
+// Results
+"Found 2 out of 3 requested tags"
+
+// Missing tags (if any)
+"Tags not found: _nonexistent_tag"
+```
+
+### Use Cases
+
+1. **Predefined Categories**: When you want to show specific categories without allowing access to all project tags
+2. **Specific Workflows**: For different content types that should only use certain tags
+3. **UI Simplification**: Reduce complexity by showing only relevant tags for a specific context
+4. **Granular Control**: Have exact control over which tagging options are available
+
+### Migration Examples
+
+#### From All Tags Mode
+```json
+// Before (all tags)
+{}
+
+// After (specific tags)
+{
+  "specificTagCodenames": "tag1,tag2,tag3"
+}
+```
+
+#### From Parent Filtered Mode
+```json
+// Before (parent filtered)
+{
+  "parentTagCodename": "parent-tag"
+}
+
+// After (specific tags)
+{
+  "specificTagCodenames": "child1,child2,child3"
+}
+```
 
 ## 🔮 Future Enhancements
 

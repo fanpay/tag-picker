@@ -7,7 +7,10 @@ import {
   createTagTree, 
   flattenTree, 
   fetchTags, 
-  formatTagsForSaving 
+  formatTagsForSaving,
+  parseSpecificTagCodenames,
+  determineTagPickerMode,
+  fetchSpecificTags
 } from './utils';
 import './App.css';
 
@@ -18,6 +21,7 @@ function App() {
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
   const [languageCodename, setLanguageCodename] = useState('default');
   const [inputValue, setInputValue] = useState('');
+  const [currentMode, setCurrentMode] = useState<'all-tags' | 'parent-filtered' | 'specific-tags'>('all-tags');
   // Parent tag state managed internally by fetchTags function
   const [initialCodenames, setInitialCodenames] = useState<string[]>([]);
 
@@ -113,11 +117,6 @@ function App() {
           setInitialCodenames(parseInitialValue(element.value));
         }
 
-        // Log configuration
-        if (element.config?.parentTagCodename) {
-          console.log(`Filtering by parent tag: ${element.config.parentTagCodename}`);
-        }
-
         // Set language
         if (context.variant?.codename) {
           setLanguageCodename(context.variant.codename);
@@ -129,12 +128,38 @@ function App() {
         // Set initial height
         window.CustomElement.setHeight(180);
 
-        // Fetch tags
-        const tags = await fetchTags(
-          context.projectId, 
-          context.variant?.codename || 'default',
-          element.config?.parentTagCodename
-        );
+        // Determine operation mode based on configuration
+        const mode = determineTagPickerMode(element.config);
+        setCurrentMode(mode);
+
+        let tags: Tag[] = [];
+
+        if (mode === 'specific-tags' && element.config?.specificTagCodenames) {
+          // Fetch only specific tags by codename
+          console.log('Using specific tags mode');
+          const specificCodenames = parseSpecificTagCodenames(element.config.specificTagCodenames);
+          tags = await fetchSpecificTags(
+            context.projectId, 
+            context.variant?.codename || 'default',
+            specificCodenames
+          );
+        } else if (mode === 'parent-filtered' && element.config?.parentTagCodename) {
+          // Fetch tags filtered by parent
+          console.log(`Filtering by parent tag: ${element.config.parentTagCodename}`);
+          tags = await fetchTags(
+            context.projectId, 
+            context.variant?.codename || 'default',
+            element.config?.parentTagCodename
+          );
+        } else {
+          // Fetch all tags (default behavior)
+          console.log('Fetching all tags');
+          tags = await fetchTags(
+            context.projectId, 
+            context.variant?.codename || 'default'
+          );
+        }
+
         setAllTags(tags);
       });
 
@@ -183,7 +208,11 @@ function App() {
 
   return (
     <div className="app">
-      <label {...getLabelProps()}>Select Tag(s) ({languageCodename})</label>
+      <label {...getLabelProps()}>
+        Select Tag(s) ({languageCodename}) 
+        {currentMode === 'specific-tags' && <span className="mode-indicator"> - Specific Tags</span>}
+        {currentMode === 'parent-filtered' && <span className="mode-indicator"> - Parent Filtered</span>}
+      </label>
       <div className="autocomplete-container">
         <div className="selected-tags">
           {selectedItems.map((tag, index) => (

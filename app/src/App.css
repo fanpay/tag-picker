@@ -16,6 +16,12 @@
   letter-spacing: -0.025em;
 }
 
+.mode-indicator {
+  font-weight: 400;
+  color: #6b7280;
+  font-size: 0.8rem;
+}
+
 .autocomplete-container {
   position: relative;
 }
